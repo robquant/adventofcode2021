@@ -1,5 +1,6 @@
 import sys
 import itertools
+import time
 
 
 def flash(octo, neighbours):
@@ -20,7 +21,7 @@ def flash(octo, neighbours):
 def step(octo, neighbours):
     # Increase each octopus energy level by one
     nrows = len(octo)
-    ncols = len(octo[1])
+    ncols = len(octo[0])
     for row in range(nrows):
         for col in range(ncols):
             octo[row][col] += 1
@@ -30,16 +31,7 @@ def step(octo, neighbours):
     return total_flashes
 
 
-def main():
-    infile = "input.txt" if len(sys.argv) == 1 else sys.argv[1]
-
-    octo = []
-    for line in open(infile):
-        line = line.rstrip("\n")
-        octo.append([int(c) for c in line])
-
-    orig = [row[:] for row in octo]
-
+def find_neighbours(octo):
     neighbours = {}
     nrows = len(octo)
     ncols = len(octo[1])
@@ -52,12 +44,27 @@ def main():
             n_col = col + +step_col
             if 0 <= n_row < nrows and 0 <= n_col < ncols:
                 neighbours[(row, col)].append((n_row, n_col))
+    return neighbours
 
+
+def main():
+    infile = "input.txt" if len(sys.argv) == 1 else sys.argv[1]
+
+    octo = []
+    for line in open(infile):
+        line = line.rstrip("\n")
+        octo.append([int(c) for c in line])
+
+    orig = [row[:] for row in octo]
+    neighbours = find_neighbours(octo)
+
+    start = time.time()
     nflashes = sum(step(octo, neighbours) for _ in range(100))
     print("Part 1: ", nflashes)
+    print(f"Runtime: {(time.time() - start) * 1000} ms")
 
     octo = orig
-    total_octopusses = nrows * ncols
+    total_octopusses = len(octo) * len(octo[0])
     count = 1
     while step(octo, neighbours) < total_octopusses:
         count += 1
