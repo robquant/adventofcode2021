@@ -90,4 +90,14 @@ func main() {
 	}
 	fmt.Printf("Flash: %d\n", total_flashes)
 	fmt.Printf("Runtime: %v\n", time.Since(start))
+
+	array = read_array("input.txt")
+	start = time.Now()
+	counter := 0
+	for nflashes := 0; nflashes < 100; nflashes = step(array) {
+		counter++
+	}
+	fmt.Printf("Part 2: %d\n", counter)
+	fmt.Printf("Runtime: %v\n", time.Since(start))
+
 }

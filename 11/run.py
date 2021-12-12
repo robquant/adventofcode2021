@@ -66,9 +66,11 @@ def main():
     octo = orig
     total_octopusses = len(octo) * len(octo[0])
     count = 1
+    start = time.time()
     while step(octo, neighbours) < total_octopusses:
         count += 1
     print("Part 2: ", count)
+    print(f"Runtime: {(time.time() - start) * 1000} ms")
 
 
 if __name__ == "__main__":
