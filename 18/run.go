@@ -11,7 +11,6 @@ import (
 
 type SnailfishNumber struct {
 	Left, Right interface{}
-	Parent      *SnailfishNumber
 }
 
 type TokenType int
@@ -71,31 +70,27 @@ func assert(val bool) {
 }
 
 func parseToTree(tokens []Token) *SnailfishNumber {
-	number, _ := parseToSubTree(tokens, 0, nil)
+	number, _ := parseToSubTree(tokens, 0)
 	return number
 }
 
-func parseToSubTree(tokens []Token, start int, parent *SnailfishNumber) (*SnailfishNumber, int) {
+func parseToSubTree(tokens []Token, start int) (*SnailfishNumber, int) {
 	pos := start
 	assert(tokens[pos].Type == OPEN_PAR)
 	pos++
 	var left, right interface{}
 	var result SnailfishNumber
 
-	// Only single digit numbers
-	// left, err = strconv.Atoi(tokens[pos : pos+1])
 	if tokens[pos].Type == NUMBER {
 		left = tokens[pos].Value
 	} else {
-		left, pos = parseToSubTree(tokens, pos, &result)
+		left, pos = parseToSubTree(tokens, pos)
 	}
-	// pos++
-	// assert(tokens[pos] == ',')
 	pos++
 	if tokens[pos].Type == NUMBER {
 		right = tokens[pos].Value
 	} else {
-		right, pos = parseToSubTree(tokens, pos, &result)
+		right, pos = parseToSubTree(tokens, pos)
 	}
 	pos++
 	assert(tokens[pos].Type == CLOSE_PAR)
